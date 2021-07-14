@@ -53,8 +53,8 @@ func (q *qLearning) NextAction(board board.Board) (*action.Item, error) {
 	act := []int{}
 	selection := rand.Int() % len(acts)
 	retAct, err := action.NewItem(acts[selection][0], acts[selection][1], q.symbol)
-	if rand.Int()%2 != 0 {
-		// 1/2の確率で真剣に打つ
+	// 1/5の確率で適当に打つ
+	if rand.Int()%5 != 0 {
 		for i := range acts {
 			actVal := util.CalcAct(acts[i][0], acts[i][1])
 			pp := q.qf.Value(st, actVal)
