@@ -43,6 +43,7 @@ func main() {
 			if winner == nil {
 				fmt.Println("drow")
 			} else {
+				fmt.Println("winner:" + winner.Name())
 				if winner.Name() == "qLean" {
 					// 勝ったら報酬 +1
 					p1.ApplyFromLast(1)

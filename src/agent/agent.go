@@ -9,7 +9,6 @@ import (
 	"github.com/TTRSQ/CircleCrossGame/domain/game/board"
 	"github.com/TTRSQ/qLearnAgent/src/qFunc"
 	"github.com/TTRSQ/qLearnAgent/src/status"
-	"github.com/TTRSQ/qLearnAgent/src/util"
 )
 
 // ユーザー(console)
@@ -60,10 +59,10 @@ func (q *qLearning) NextAction(board board.Board) (*action.Item, error) {
 
 	act := []int{}
 	point := -100000.0
-	stPos := util.CalcStatus(board)
+	stPos := qFunc.CalcStatus(board)
 	if !q.useGreedy() {
 		for i := range canPutPoints {
-			actPos := util.CalcAct(canPutPoints[i][0], canPutPoints[i][1])
+			actPos := qFunc.CalcAct(canPutPoints[i][0], canPutPoints[i][1])
 			pp := q.qf.Value(stPos, actPos)
 			p := 0.0
 			if pp != nil {
@@ -84,7 +83,7 @@ func (q *qLearning) NextAction(board board.Board) (*action.Item, error) {
 		retAct.X(),
 		retAct.Y(),
 	))
-	q.hist.Append(status.NewNode(stPos, util.CalcAct(retAct.X(), retAct.Y())))
+	q.hist.Append(status.NewNode(stPos, qFunc.CalcAct(retAct.X(), retAct.Y())))
 
 	return retAct, nil
 }
