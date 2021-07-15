@@ -23,6 +23,7 @@ func main() {
 	t := time.Now()
 
 	for i := 0; i < 50000; i++ {
+		p1.UpdateGreedyRate(1 - float64(i)/float64(50000))
 		t = t.Add(time.Second)
 		// game毎に手順を初期化する
 		p1.InitHist()

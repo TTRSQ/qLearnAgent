@@ -13,18 +13,20 @@ import (
 
 // ユーザー(console)
 type qLearning struct {
-	symbol constants.Symbol
-	hist   status.History
-	name   string
-	qf     qFunc.Func
+	symbol     constants.Symbol
+	hist       status.History
+	name       string
+	qf         qFunc.Func
+	greedyRate float64
 }
 
 func Get(symbol constants.Symbol, name string) qLearning {
 	return qLearning{
-		symbol: symbol,
-		name:   name,
-		hist:   status.NewHistory(),
-		qf:     qFunc.NewQFunc(),
+		symbol:     symbol,
+		name:       name,
+		hist:       status.NewHistory(),
+		qf:         qFunc.NewQFunc(),
+		greedyRate: 1.0, // 学習初期は適当にうつ
 	}
 }
 
@@ -46,9 +48,13 @@ func (q *qLearning) ApplyFromLast(r float64) {
 	}
 }
 
+func (q *qLearning) UpdateGreedyRate(p float64) {
+	q.greedyRate = p
+}
+
 func (q *qLearning) useGreedy() bool {
-	// 1/5の確率で適当に打つ
-	return rand.Int()%5 == 0
+	g := int(q.greedyRate * 100)
+	return rand.Int()%100 < g
 }
 
 func (q *qLearning) NextAction(board board.Board) (*action.Item, error) {
