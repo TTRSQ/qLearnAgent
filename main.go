@@ -22,8 +22,11 @@ func main() {
 	ma := twma.NewTWMA(100 * time.Second)
 	t := time.Now()
 
-	for i := 0; i < 50000; i++ {
-		p1.UpdateGreedyRate(1 - float64(i)/float64(50000))
+	gameCount := 50000
+
+	for i := 0; i < gameCount; i++ {
+		eps := 1 - float64(i)/float64(gameCount)
+		p1.UpdateGreedyRate(eps)
 		t = t.Add(time.Second)
 		// game毎に手順を初期化する
 		p1.InitHist()
@@ -64,7 +67,7 @@ func main() {
 		}
 		v, err := ma.Value()
 		if err == nil && i%100 == 0 {
-			fmt.Println("win_rate:", "\t", i, "\t", v)
+			fmt.Println("win_rate:", "\t", i, "\t", v, "\t", fmt.Sprintf("%.2f", eps))
 		}
 	}
 }
