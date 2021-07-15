@@ -2,6 +2,7 @@ package util
 
 import "github.com/TTRSQ/CircleCrossGame/domain/game/board"
 
+// Q関数における状態値(空間内での座標)を計算して返す
 func CalcStatus(board board.Board) int {
 	stamp := [][]int{
 		{6561, 2187, 729},
@@ -21,6 +22,7 @@ func CalcStatus(board board.Board) int {
 	return sum
 }
 
+// Q関数における手の値(空間内での座標)を計算して返す
 func CalcAct(x, y int) int {
 	stamp := [][]int{
 		{256, 128, 64},

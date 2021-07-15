@@ -33,6 +33,7 @@ func (q *qLearning) InitHist() {
 	q.hist = status.NewHistory()
 }
 
+// 後ろから割引しつつ報酬を伝搬する
 func (q *qLearning) ApplyFromLast(r float64) {
 	lastIdx := len(q.hist.Nodes) - 1
 	rGamma := r
@@ -46,25 +47,31 @@ func (q *qLearning) ApplyFromLast(r float64) {
 	}
 }
 
-func (q *qLearning) NextAction(board board.Board) (*action.Item, error) {
-	st := util.CalcStatus(board)
-	acts := board.CanPutPoints()
-	point := -100000.0
-	act := []int{}
-	selection := rand.Int() % len(acts)
-	retAct, err := action.NewItem(acts[selection][0], acts[selection][1], q.symbol)
+func (q *qLearning) useGreedy() bool {
 	// 1/5の確率で適当に打つ
-	if rand.Int()%5 != 0 {
-		for i := range acts {
-			actVal := util.CalcAct(acts[i][0], acts[i][1])
-			pp := q.qf.Value(st, actVal)
+	return rand.Int()%5 == 0
+}
+
+func (q *qLearning) NextAction(board board.Board) (*action.Item, error) {
+	canPutPoints := board.CanPutPoints()
+	selection := rand.Int() % len(canPutPoints)
+	// useGreedy == true の時はrandで選んだ手をそのまま返却する
+	retAct, err := action.NewItem(canPutPoints[selection][0], canPutPoints[selection][1], q.symbol)
+
+	act := []int{}
+	point := -100000.0
+	stPos := util.CalcStatus(board)
+	if !q.useGreedy() {
+		for i := range canPutPoints {
+			actPos := util.CalcAct(canPutPoints[i][0], canPutPoints[i][1])
+			pp := q.qf.Value(stPos, actPos)
 			p := 0.0
 			if pp != nil {
 				p = *pp
 			}
 			if p > point {
 				point = p
-				act = acts[i]
+				act = canPutPoints[i]
 			}
 		}
 		retAct, err = action.NewItem(act[0], act[1], q.symbol)
@@ -77,7 +84,7 @@ func (q *qLearning) NextAction(board board.Board) (*action.Item, error) {
 		retAct.X(),
 		retAct.Y(),
 	))
-	q.hist.Append(status.NewNode(st, util.CalcAct(retAct.X(), retAct.Y())))
+	q.hist.Append(status.NewNode(stPos, util.CalcAct(retAct.X(), retAct.Y())))
 
 	return retAct, nil
 }

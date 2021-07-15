@@ -2,9 +2,8 @@ package qFunc
 
 // 状態 * 行動 の空間すべての値を保存している。
 type Func struct {
-	// 前者が状態、後者が空間
-	space map[int]map[int]float64
-	eta   float64
+	space map[int]map[int]float64 // 前者が状態、後者が行動
+	eta   float64                 // 学習率
 }
 
 func NewQFunc() Func {
@@ -15,20 +14,21 @@ func NewQFunc() Func {
 }
 
 func (f *Func) Apply(st, act int, r float64) error {
+	delta := f.eta * r
 	_, exists := f.space[st]
 	if !exists {
 		f.space[st] = map[int]float64{
-			act: r,
+			act: delta,
 		}
 		return nil
 	}
 	_, exists = f.space[st][act]
 	if !exists {
-		f.space[st][act] = r
+		f.space[st][act] = delta
 		return nil
 	}
 
-	f.space[st][act] += f.eta * r
+	f.space[st][act] += delta
 
 	return nil
 }

@@ -20,6 +20,7 @@ func NewNode(st, act int) node {
 	}
 }
 
+// History こういう状態に対してこのような行動をしたよという記録を積む
 type History struct {
 	Nodes []node
 }
