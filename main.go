@@ -18,12 +18,13 @@ func main() {
 	p1 := agent.Get(constants.CIRCLE, "qLean")
 	p2 := randcp.Get(constants.CROSS, "rand")
 
-	// 適切ではないが100s窓のmaを1秒ずつ進めて勝率を出す
+	// 適切ではないが100s窓のmaを1sずつ進めて直近100戦の勝率を出す
 	ma := twma.NewTWMA(100 * time.Second)
 	t := time.Now()
 
 	gameCount := 50000
 
+	fmt.Println("learn_data:", "\t", "game_count", "\t", "win_rate", "\t", "epsilon")
 	for i := 0; i < gameCount; i++ {
 		eps := 1 - float64(i)/float64(gameCount)
 		p1.UpdateGreedyRate(eps)
@@ -67,7 +68,7 @@ func main() {
 		}
 		v, err := ma.Value()
 		if err == nil && i%100 == 0 {
-			fmt.Println("win_rate:", "\t", i, "\t", v, "\t", fmt.Sprintf("%.2f", eps))
+			fmt.Println("learn_data:", "\t", i, "\t", v, "\t", fmt.Sprintf("%.2f", eps))
 		}
 	}
 }
