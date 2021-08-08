@@ -2,6 +2,9 @@
 qLearnAgent for CircleCrossGame
 https://github.com/TTRSQ/CircleCrossGame のAgentとして、QLearningを用いたものを実装してみました。
 
+記事
+https://zenn.dev/ttrsq/articles/83872e7fff4021#1.-%E8%A1%8C%E5%8B%95%E8%A9%95%E4%BE%A1%E9%96%A2%E6%95%B0q(s%2Ca)%E3%82%92%E5%AE%9A%E7%BE%A9%E3%81%99%E3%82%8B
+
 https://github.com/TTRSQ/qLearnAgent/blob/main/src/qFunc/qFunc.go
 が本体になるかと思います。
 
